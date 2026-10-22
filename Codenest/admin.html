@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CodeNest Academy - Admin Dashboard.">
+  <title>CodeNest Academy | Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a href="landing.html" class="logo">Code<span>Nest</span> Academy</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+      <nav id="navLinks">
+        <a href="landing.html">Home</a>
+        <a href="index.html#courses">Courses</a>
+        <a href="admin.html" class="active">Admin</a>
+        <a href="auth.html" id="navLogout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt" id="admin">
+      <div class="container">
+        <div class="admin-header">
+          <div>
+            <h2>Admin: Enrollments</h2>
+            <p class="auth-subtitle">View, export, and manage student course enrollments.</p>
+          </div>
+          <ul class="stats admin-stats">
+            <li><strong id="statCourses">0</strong> Courses</li>
+            <li><strong id="statStudents">0</strong> Enrollments</li>
+          </ul>
+        </div>
+
+        <div id="adminPanel">
+          <div class="toolbar">
+            <button class="btn" id="exportBtn">Export CSV</button>
+            <button class="btn btn-danger" id="clearBtn">Clear All</button>
+            <button class="btn btn-outline dark" id="lockBtn">Lock</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>Schedule</th><th>Date</th><th></th></tr>
+              </thead>
+              <tbody id="enrollBody"></tbody>
+            </table>
+          </div>
+          <p class="empty hidden" id="noEnrollments">No enrollments yet.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> CodeNest Academy. SIWES project demo.</p>
+    </div>
+  </footer>
+  <script>
+    "use strict";
+
+    const COURSES_COUNT = 7;
+    const STORAGE_KEY = "academy_enrollments";
+    const SESSION_KEY = "academy_session";
+    const $ = (id) => document.getElementById(id);
+
+    function getSession() {
+      try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY));
+      } catch {
+        return null;
+      }
+    }
+
+    function clearSession() {
+      localStorage.removeItem(SESSION_KEY);
+    }
+
+    // Redirect unauthenticated users or non-admins to auth.html
+    (function requireAdminAuth() {
+      const session = getSession();
+      if (!session || session.role !== "admin") {
+        window.location.replace("auth.html?mode=admin&redirect=admin.html");
+      }
+    })();
+
+    function loadEnrollments() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveEnrollments(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function escapeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function updateStats() {
+      if ($("statCourses")) $("statCourses").textContent = COURSES_COUNT;
+      if ($("statStudents")) $("statStudents").textContent = loadEnrollments().length;
+    }
+
+    function renderEnrollments() {
+      const list = loadEnrollments();
+      $("enrollBody").innerHTML = list.map((r, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${escapeHTML(r.name)}</td>
+          <td>${escapeHTML(r.email)}</td>
+          <td>${escapeHTML(r.phone)}</td>
+          <td>${escapeHTML(r.courseTitle)}</td>
+          <td>${escapeHTML(r.schedule)}</td>
+          <td>${escapeHTML(r.date)}</td>
+          <td><button class="del-btn" data-id="${r.id}">Delete</button></td>
+        </tr>`).join("");
+      $("noEnrollments").classList.toggle("hidden", list.length > 0);
+      updateStats();
+    }
+
+    function exportCSV() {
+      const list = loadEnrollments();
+      if (!list.length) return alert("No enrollments to export.");
+      const cell = (v) => `"${String(v).replace(/"/g, '""')}"`;
+      const rows = [["Name", "Email", "Phone", "Course", "Schedule", "Date"]]
+        .concat(list.map((r) => [r.name, r.email, r.phone, r.courseTitle, r.schedule, r.date]));
+      const csv = rows.map((r) => r.map(cell).join(",")).join("\n");
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+      link.download = "enrollments.csv";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function handleLock(e) {
+      if (e) e.preventDefault();
+      clearSession();
+      window.location.href = "auth.html?mode=admin";
+    }
+
+    function initAdmin() {
+      $("year").textContent = new Date().getFullYear();
+      renderEnrollments();
+
+      $("menuBtn").addEventListener("click", () => {
+        const open = $("navLinks").classList.toggle("open");
+        $("menuBtn").setAttribute("aria-expanded", open);
+      });
+
+      $("lockBtn").addEventListener("click", handleLock);
+      $("navLogout").addEventListener("click", handleLock);
+      $("exportBtn").addEventListener("click", exportCSV);
+
+      $("clearBtn").addEventListener("click", () => {
+        if (confirm("Delete ALL enrollments? This cannot be undone.")) {
+          saveEnrollments([]);
+          renderEnrollments();
+        }
+      });
+
+      $("enrollBody").addEventListener("click", (e) => {
+        const btn = e.target.closest(".del-btn");
+        if (!btn) return;
+        const id = Number(btn.dataset.id);
+        saveEnrollments(loadEnrollments().filter((r) => r.id !== id));
+        renderEnrollments();
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", initAdmin);
+  </script>
+</body>
+</html>

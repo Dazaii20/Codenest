@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CodeNest Academy - hands-on tech training with online course enrollment.">
+  <title>CodeNest Academy | Learn Tech Skills</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a href="landing.html" class="logo">Code<span>Nest</span> Academy</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+      <nav id="navLinks">
+        <a href="landing.html">Home</a>
+        <a href="#courses">Courses</a>
+        <a href="#about">About</a>
+        <a href="auth.html?mode=register" id="navEnroll">Enroll</a>
+        <a href="admin.html" id="navAdmin">Admin</a>
+        <a href="auth.html" id="navAuth">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="container hero-inner">
+        <p class="user-greeting hidden" id="userGreeting"></p>
+        <p class="eyebrow">Practical tech education for tomorrow's builders</p>
+        <h1>Start your tech career with practical, hands-on training</h1>
+        <p>Learn in-demand skills from experienced mentors. Pick a course and enroll in under a minute.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#courses">Browse Courses</a>
+          <a class="btn btn-outline" href="auth.html?mode=register" id="heroEnrollBtn">Enroll Now</a>
+        </div>
+        <ul class="stats">
+          <li><strong id="statCourses">0</strong> Courses</li>
+          <li><strong id="statStudents">0</strong> Students enrolled</li>
+          <li><strong>100%</strong> Practical</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- COURSES -->
+    <section class="section" id="courses">
+      <div class="container">
+        <h2>Our Courses</h2>
+        <p class="section-copy">Choose a focused learning path built around real projects, mentor support, and the skills employers value.</p>
+        <div class="toolbar">
+          <input type="search" id="search" placeholder="Search courses..." aria-label="Search courses">
+          <select id="levelFilter" aria-label="Filter by level">
+            <option value="all">All levels</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+          </select>
+        </div>
+        <div class="grid" id="courseGrid"></div>
+        <p class="empty hidden" id="noCourses">No courses match your search.</p>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section alt" id="about">
+      <div class="container about">
+        <div>
+          <h2>Why learn with us?</h2>
+          <p>We focus on building real projects, not just theory. Every student works with mentors and learns skills employers ask for.</p>
+        </div>
+        <ul class="features">
+          <li><strong>Hands-on projects</strong> Build a portfolio as you learn.</li>
+          <li><strong>Mentor support</strong> Get guidance whenever you are stuck.</li>
+          <li><strong>Flexible schedules</strong> Weekday, weekend and online options.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> CodeNest Academy. SIWES project demo.</p>
+    </div>
+  </footer>
+
+  <script src="index.js"></script>
+</body>
+</html>

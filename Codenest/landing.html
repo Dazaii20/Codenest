@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CodeNest Academy helps aspiring tech professionals build practical, career-ready skills.">
+  <title>CodeNest Academy | Build Skills. Build Your Future.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="landing-page">
+  <header class="site-header">
+    <div class="container nav">
+      <a href="landing.html" class="logo">Code<span>Nest</span> Academy</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+      <nav id="navLinks">
+        <a href="#programs">Programs</a>
+        <a href="#why-us">Why CodeNest</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="index.html">Explore courses</a>
+        <a href="auth.html?mode=register" class="nav-cta">Get started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="landing-hero">
+      <div class="container landing-hero-grid">
+        <div class="landing-copy">
+          <p class="eyebrow">Career-focused technology education</p>
+          <h1>Learn the skills to build what’s next.</h1>
+          <p>Build real projects, learn from supportive mentors, and grow a portfolio that helps you stand out in tech.</p>
+          <div class="hero-actions">
+            <a class="btn" href="auth.html?mode=register">Start learning today</a>
+            <a class="text-link" href="index.html">Browse all courses <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="trust-row" aria-label="CodeNest highlights">
+            <span><b>7</b> practical courses</span>
+            <span><b>100%</b> project-led learning</span>
+          </div>
+        </div>
+        <div class="hero-showcase" aria-label="Illustration of a learner's progress">
+          <div class="showcase-glow"></div>
+          <div class="showcase-window">
+            <div class="window-top"><i></i><i></i><i></i><span>your-portfolio.html</span></div>
+            <div class="code-lines"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="project-card"><span class="project-icon">✦</span><div><small>Latest project</small><strong>Creative portfolio</strong></div><em>Complete</em></div>
+          </div>
+          <div class="floating-chip chip-one">HTML &amp; CSS</div>
+          <div class="floating-chip chip-two">Mentor reviewed</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section" id="programs">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Explore your path</p>
+          <h2>Practical courses for ambitious beginners.</h2>
+          <p>Choose a path that matches your goals, then learn by doing from your first week.</p>
+        </div>
+        <div class="path-grid">
+          <article class="path-card"><span class="path-icon">&lt;/&gt;</span><h3>Software development</h3><p>From responsive websites to full-stack applications.</p><a href="index.html?level=Beginner">Explore development <span>→</span></a></article>
+          <article class="path-card"><span class="path-icon">◌</span><h3>Design &amp; product</h3><p>Turn clear ideas into useful, delightful digital products.</p><a href="index.html">Explore design <span>→</span></a></article>
+          <article class="path-card"><span class="path-icon">⌁</span><h3>Data &amp; digital skills</h3><p>Build confidence with the tools shaping modern work.</p><a href="index.html">Explore data <span>→</span></a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section landing-muted" id="why-us">
+      <div class="container value-grid">
+        <div class="value-copy">
+          <p class="eyebrow">Built for momentum</p>
+          <h2>More than lessons. A place to make progress.</h2>
+          <p>We focus on the habits, projects, and support systems that turn new skills into confident capability.</p>
+        </div>
+        <ul class="value-list">
+          <li><span>01</span><div><h3>Learn by building</h3><p>Every course is designed around hands-on practice and portfolio-ready work.</p></div></li>
+          <li><span>02</span><div><h3>Get useful support</h3><p>Receive guidance from mentors when you need a clear next step.</p></div></li>
+          <li><span>03</span><div><h3>Move at your pace</h3><p>Choose weekday, weekend, or online learning that fits your schedule.</p></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="landing-section" id="how-it-works">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">A clear way forward</p>
+          <h2>From curious to capable in three steps.</h2>
+        </div>
+        <ol class="steps">
+          <li><span>1</span><h3>Choose your course</h3><p>Find the learning path that fits where you want to go.</p></li>
+          <li><span>2</span><h3>Enroll in minutes</h3><p>Create your account and select a schedule that works for you.</p></li>
+          <li><span>3</span><h3>Build your future</h3><p>Learn, create projects, and develop skills you can show.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="container cta-content">
+        <div><p class="eyebrow">Your next chapter starts here</p><h2>Ready to turn interest into impact?</h2></div>
+        <a class="btn btn-light" href="auth.html?mode=register">Start your application</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container"><p>&copy; <span id="year"></span> CodeNest Academy. Learn boldly. Build confidently.</p></div></footer>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("menuBtn").addEventListener("click", () => {
+      const nav = document.getElementById("navLinks");
+      const open = nav.classList.toggle("open");
+      document.getElementById("menuBtn").setAttribute("aria-expanded", String(open));
+    });
+  </script>
+</body>
+</html>

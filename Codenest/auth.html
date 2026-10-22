@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CodeNest Academy - Login and Student Registration.">
+  <title>CodeNest Academy | Login &amp; Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a href="landing.html" class="logo">Code<span>Nest</span> Academy</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+      <nav id="navLinks">
+        <a href="landing.html">Home</a>
+        <a href="index.html#courses">Courses</a>
+        <a href="index.html#about">About</a>
+        <a href="auth.html" class="active">Login / Register</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section alt auth-section">
+      <div class="container narrow">
+        <div class="auth-card">
+          <div class="auth-tabs" role="tablist">
+            <button type="button" class="auth-tab active" id="tabLogin" role="tab" aria-selected="true">Login</button>
+            <button type="button" class="auth-tab" id="tabRegister" role="tab" aria-selected="false">Register &amp; Enroll</button>
+          </div>
+
+          <!-- LOGIN VIEW -->
+          <div id="loginView">
+            <h2>Welcome Back</h2>
+            <p class="auth-subtitle">Sign in as a student or unlock the admin dashboard.</p>
+
+            <div class="role-switch" role="radiogroup" aria-label="Login role">
+              <label class="role-option">
+                <input type="radio" name="loginRole" value="student" checked>
+                <span>Student Login</span>
+              </label>
+              <label class="role-option">
+                <input type="radio" name="loginRole" value="admin">
+                <span>Admin Login</span>
+              </label>
+            </div>
+
+            <form id="loginForm" novalidate>
+              <div id="studentLoginFields">
+                <div class="field">
+                  <label for="loginEmail">Email address</label>
+                  <input type="email" id="loginEmail" name="loginEmail" autocomplete="email" placeholder="you@example.com">
+                  <small class="error" data-for="loginEmail"></small>
+                </div>
+                <div class="field">
+                  <label for="loginPassword">Password</label>
+                  <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" placeholder="Enter your password">
+                  <small class="error" data-for="loginPassword"></small>
+                </div>
+              </div>
+
+              <div id="adminLoginFields" class="hidden">
+                <div class="field">
+                  <label for="pin">Admin PIN</label>
+                  <input type="password" id="pin" name="pin" placeholder="Enter admin PIN (e.g. 1234)" inputmode="numeric" autocomplete="off">
+                  <small class="error" id="pinError" data-for="pin"></small>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-block" id="loginSubmitBtn">Sign In</button>
+              <p class="auth-switch-text">
+                Don't have an account? <a href="#register" id="goToRegister">Register &amp; Enroll here</a>
+              </p>
+            </form>
+          </div>
+
+          <!-- REGISTER / ENROLL VIEW -->
+          <div id="registerView" class="hidden">
+            <h2>Student Registration &amp; Enrollment</h2>
+            <p class="auth-subtitle">Create your student account and enroll in a course.</p>
+
+            <form id="enrollForm" novalidate>
+              <div class="field">
+                <label for="fullName">Full name</label>
+                <input type="text" id="fullName" name="fullName" autocomplete="name" required>
+                <small class="error" data-for="fullName"></small>
+              </div>
+              <div class="field">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+                <small class="error" data-for="email"></small>
+              </div>
+              <div class="field">
+                <label for="phone">Phone number</label>
+                <input type="tel" id="phone" name="phone" placeholder="e.g. 08012345678" autocomplete="tel" required>
+                <small class="error" data-for="phone"></small>
+              </div>
+              <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="At least 6 characters" autocomplete="new-password" required>
+                <small class="error" data-for="password"></small>
+              </div>
+              <div class="field">
+                <label for="course">Course</label>
+                <select id="course" name="course" required></select>
+                <small class="error" data-for="course"></small>
+              </div>
+              <div class="field">
+                <label for="schedule">Schedule</label>
+                <select id="schedule" name="schedule" required>
+                  <option value="">Select a schedule</option>
+                  <option>Weekdays</option>
+                  <option>Weekends</option>
+                  <option>Online</option>
+                </select>
+                <small class="error" data-for="schedule"></small>
+              </div>
+              <button type="submit" class="btn btn-block">Register &amp; Submit Enrollment</button>
+              <p class="success hidden" id="successMsg" role="status"></p>
+              <p class="auth-switch-text">
+                Already registered? <a href="#login" id="goToLogin">Sign in here</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> CodeNest Academy. SIWES project demo.</p>
+    </div>
+  </footer>
+  <script>
+    "use strict";
+
+    const COURSES = [
+      { id: "frontend", title: "Front-end Development", level: "Beginner", duration: "12 weeks", price: 50000,
+        desc: "HTML, CSS and JavaScript from scratch. Build responsive websites." },
+      { id: "fullstack", title: "Fullstack Web Development", level: "Intermediate", duration: "20 weeks", price: 100000,
+        desc: "Front-end plus server-side programming and databases." },
+      { id: "react", title: "ReactJS / NextJS", level: "Intermediate", duration: "8 weeks", price: 80000,
+        desc: "Build modern single-page apps and production-ready React sites." },
+      { id: "mobile", title: "Mobile App Development", level: "Intermediate", duration: "16 weeks", price: 100000,
+        desc: "Create cross-platform mobile apps for Android and iOS." },
+      { id: "data", title: "Data Science", level: "Intermediate", duration: "16 weeks", price: 110000,
+        desc: "Python, data analysis, visualization and intro to machine learning." },
+      { id: "design", title: "Product / Graphic Design", level: "Beginner", duration: "10 weeks", price: 50000,
+        desc: "UI/UX principles, wireframing and graphic design tools." },
+      { id: "literacy", title: "Computer Literacy", level: "Beginner", duration: "4 weeks", price: 20000,
+        desc: "Computer basics, typing, office tools and safe internet use." }
+    ];
+
+    const STORAGE_KEY = "academy_enrollments";
+    const USERS_KEY = "academy_users";
+    const SESSION_KEY = "academy_session";
+    const ADMIN_PIN = "1234";
+
+    const $ = (id) => document.getElementById(id);
+    const naira = (n) => "\u20A6" + n.toLocaleString("en-NG");
+
+    function loadEnrollments() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveEnrollments(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function loadUsers() {
+      try {
+        return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveUsers(list) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(list));
+    }
+
+    function getSession() {
+      try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY));
+      } catch {
+        return null;
+      }
+    }
+
+    function setSession(sessionData) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+    }
+
+    function fillCourseSelect() {
+      $("course").innerHTML =
+        '<option value="">Select a course</option>' +
+        COURSES.map((c) => `<option value="${c.id}">${c.title} (${naira(c.price)})</option>`).join("");
+    }
+
+    /* ---------- Form validation ---------- */
+    const validators = {
+      fullName: (v) => (v.trim().split(/\s+/).length >= 2 && v.trim().length >= 5) ? "" : "Enter your first and last name.",
+      email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? "" : "Enter a valid email address.",
+      phone: (v) => /^(\+234|0)[789][01]\d{8}$/.test(v.replace(/\s|-/g, "")) ? "" : "Enter a valid Nigerian phone number.",
+      password: (v) => v.length >= 6 ? "" : "Password must be at least 6 characters.",
+      course: (v) => v ? "" : "Please choose a course.",
+      schedule: (v) => v ? "" : "Please choose a schedule."
+    };
+
+    function showError(field, message) {
+      const input = $(field);
+      const errEl = document.querySelector(`.error[data-for="${field}"]`);
+      if (errEl) errEl.textContent = message;
+      if (input) input.classList.toggle("invalid", Boolean(message));
+    }
+    function clearErrors() {
+      document.querySelectorAll(".error").forEach((el) => el.textContent = "");
+      document.querySelectorAll(".invalid").forEach((el) => el.classList.remove("invalid"));
+    }
+
+    function showView(view) {
+      const isRegister = view === "register";
+      $("loginView").classList.toggle("hidden", isRegister);
+      $("registerView").classList.toggle("hidden", !isRegister);
+      $("tabLogin").classList.toggle("active", !isRegister);
+      $("tabRegister").classList.toggle("active", isRegister);
+      $("tabLogin").setAttribute("aria-selected", String(!isRegister));
+      $("tabRegister").setAttribute("aria-selected", String(isRegister));
+      clearErrors();
+    }
+
+    function requestedPage(role) {
+      // Role-based destinations avoid sending a student back to the protected
+      // admin route (which would immediately redirect them to login again).
+      if (role === "admin") return "admin.html";
+      return "index.html";
+    }
+
+    function submitRegistration(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = {};
+      let valid = true;
+      Object.entries(validators).forEach(([field, validate]) => {
+        const value = form.elements[field].value;
+        const message = validate(value);
+        showError(field, message);
+        if (message) valid = false;
+        data[field] = value.trim();
+      });
+      if (!valid) return;
+      const users = loadUsers();
+      if (users.some((user) => user.email.toLowerCase() === data.email.toLowerCase())) {
+        showError("email", "An account with this email already exists. Please sign in.");
+        return;
+      }
+      const enrollments = loadEnrollments();
+      const course = COURSES.find((item) => item.id === data.course);
+      users.push({ name: data.fullName, email: data.email, password: form.elements.password.value });
+      enrollments.push({ id: Date.now(), name: data.fullName, email: data.email, phone: data.phone,
+        course: data.course, courseTitle: course.title, schedule: data.schedule,
+        date: new Date().toLocaleDateString("en-NG") });
+      saveUsers(users);
+      saveEnrollments(enrollments);
+      setSession({ role: "student", name: data.fullName, email: data.email });
+      window.location.replace("index.html?registered=1");
+    }
+
+    function submitLogin(event) {
+      event.preventDefault();
+      const isAdmin = document.querySelector('input[name="loginRole"]:checked').value === "admin";
+      clearErrors();
+      if (isAdmin) {
+        if ($("pin").value !== ADMIN_PIN) return showError("pin", "Incorrect PIN.");
+        setSession({ role: "admin" });
+        window.location.replace(requestedPage("admin"));
+        return;
+      }
+      const email = $("loginEmail").value.trim();
+      const password = $("loginPassword").value;
+      const emailMessage = validators.email(email);
+      if (emailMessage) showError("loginEmail", emailMessage);
+      if (!password) showError("loginPassword", "Enter your password.");
+      if (emailMessage || !password) return;
+      const user = loadUsers().find((item) => item.email.toLowerCase() === email.toLowerCase() && item.password === password);
+      if (!user) return showError("loginPassword", "Invalid email address or password.");
+      setSession({ role: "student", name: user.name, email: user.email });
+      window.location.replace(requestedPage("student"));
+    }
+
+    function init() {
+      $("year").textContent = new Date().getFullYear();
+      fillCourseSelect();
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get("mode");
+      const session = getSession();
+      // A signed-in user should not be shown another login form. In particular,
+      // this stops an admin from being stranded on the auth route after using a
+      // protected dashboard link.
+      if (session && session.role === "admin") return window.location.replace("admin.html");
+      if (session && session.role === "student") {
+        return window.location.replace("index.html");
+      }
+      showView(mode === "register" ? "register" : "login");
+      if (mode === "admin") {
+        document.querySelector('input[name="loginRole"][value="admin"]').checked = true;
+        $("studentLoginFields").classList.add("hidden");
+        $("adminLoginFields").classList.remove("hidden");
+        $("loginSubmitBtn").textContent = "Unlock Dashboard";
+      }
+      const selectedCourse = params.get("course");
+      if (selectedCourse && COURSES.some((course) => course.id === selectedCourse)) {
+        $("course").value = selectedCourse;
+        showView("register");
+      }
+      $("tabLogin").addEventListener("click", () => showView("login"));
+      $("tabRegister").addEventListener("click", () => showView("register"));
+      $("goToRegister").addEventListener("click", (event) => { event.preventDefault(); showView("register"); });
+      $("goToLogin").addEventListener("click", (event) => { event.preventDefault(); showView("login"); });
+      document.querySelectorAll('input[name="loginRole"]').forEach((input) => input.addEventListener("change", () => {
+        const admin = input.value === "admin" && input.checked;
+        $("studentLoginFields").classList.toggle("hidden", admin);
+        $("adminLoginFields").classList.toggle("hidden", !admin);
+        $("loginSubmitBtn").textContent = admin ? "Unlock Dashboard" : "Sign In";
+        clearErrors();
+      }));
+      $("loginForm").addEventListener("submit", submitLogin);
+      $("enrollForm").addEventListener("submit", submitRegistration);
+      document.querySelectorAll("#enrollForm input, #enrollForm select, #loginForm input").forEach((input) => input.addEventListener("input", () => showError(input.id, "")));
+      $("menuBtn").addEventListener("click", () => {
+        const open = $("navLinks").classList.toggle("open");
+        $("menuBtn").setAttribute("aria-expanded", String(open));
+      });
+    }
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
